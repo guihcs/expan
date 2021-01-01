@@ -1,0 +1,12 @@
+
+
+<mat-radio-group #radioGroup aria-label="Select an option">
+  <mat-radio-button *ngFor="let v of data"
+                    [value]="v">{{v.classifier}} {{v.date}}</mat-radio-button>
+</mat-radio-group>
+
+<div>
+  <button (click)="cancel()">cancel</button>
+  <button (click)="ok()">ok</button>
+
+</div>

@@ -1,0 +1,12 @@
+table {
+  width: 100%;
+}
+
+.best-result {
+  font-weight: bold;
+}
+
+.date-show {
+  font-size: 10px;
+  color: gray;
+}

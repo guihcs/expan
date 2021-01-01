@@ -1,0 +1,17 @@
+<h1>Datasets</h1>
+
+<div id="metricSelector">
+  <button (click)="setCalcFunction('mcc')">MCC</button>
+  <button (click)="setCalcFunction('precision')">Precision</button>
+  <button (click)="setCalcFunction('recall')">Recall</button>
+  <button (click)="setCalcFunction('bac')">BAC</button>
+  <button (click)="setCalcFunction('acc')">ACC</button>
+</div>
+
+<div>
+  <app-experiment-table
+    [experiments]="getExperiments()"
+    [calcFunction]="calcFunction"
+  ></app-experiment-table>
+
+</div>
