@@ -1,0 +1,31 @@
+
+<h1> Data Plot </h1>
+
+<mat-form-field appearance="fill">
+  <mat-label>Select Architecture</mat-label>
+  <mat-select (valueChange)="setSelectedValue($event)" >
+    <mat-option *ngFor="let ensemble of ensembles" [value]="ensemble">
+      {{ensemble.classifier.name}} {{ensemble.classifier.label}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div id="metricSelector">
+  <button (click)="setSelectedMetric('mcc')">MCC</button>
+  <button (click)="setSelectedMetric('precision')">Precision</button>
+  <button (click)="setSelectedMetric('recall')">Recall</button>
+  <button (click)="setSelectedMetric('bac')">BAC</button>
+  <button (click)="setSelectedMetric('acc')">ACC</button>
+</div>
+
+
+<div class="line-container">
+  <ngx-charts-line-chart
+    [xAxis]="true"
+    [yAxis]="true"
+    [results]="lineRelation"
+    [legend]="true"
+    [curve]="curve"
+  ></ngx-charts-line-chart>
+</div>
+

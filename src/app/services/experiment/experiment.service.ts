@@ -191,4 +191,7 @@ export class ExperimentService {
     return ['mcc', 'precision', 'recall', 'bac', 'acc'];
   }
 
+  getClassifierIndexName(cl){
+    return cl.classifier.name + ',' + cl.date;
+  }
 }

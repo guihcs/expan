@@ -15,7 +15,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatListModule} from "@angular/material/list";
 import {MatDialogModule} from "@angular/material/dialog";
 import { ComparatorComponent } from './tabs/comparator/comparator.component';
-import { DatePlotComponent } from './tabs/date-plot/date-plot.component';
+import { DatePlotComponent } from './tabs/data-plot/date-plot.component';
 import { ClassifierSelectorComponent } from './components/classifier-selector/classifier-selector.component';
 import {MatRadioModule} from "@angular/material/radio";
 import { DatabaseInfoComponent } from './components/database-info/database-info.component';

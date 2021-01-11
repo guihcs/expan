@@ -4,7 +4,7 @@ import {HomeComponent} from "./tabs/home/home.component";
 import {GenerationComponent} from "./tabs/generation/generation.component";
 import {MainComponent} from "./main.component";
 import {ComparatorComponent} from "./tabs/comparator/comparator.component";
-import {DatePlotComponent} from "./tabs/date-plot/date-plot.component";
+import {DatePlotComponent} from "./tabs/data-plot/date-plot.component";
 
 const routes: Routes = [
 
@@ -25,7 +25,7 @@ const routes: Routes = [
         component: ComparatorComponent
       },
       {
-        path: 'date-plot',
+        path: 'data-plot',
         component: DatePlotComponent
       }
     ]
