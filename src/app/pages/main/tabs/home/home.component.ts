@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {BehaviorSubject} from "rxjs";
 import {CALC_FUNCTIONS, mcc} from "../../../../metrics/metrics";
 import {ExperimentService} from "../../../../services/experiment/experiment.service";
+import {BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'app-home',
@@ -10,10 +10,9 @@ import {ExperimentService} from "../../../../services/experiment/experiment.serv
 })
 export class HomeComponent implements OnInit {
 
-  calcFunction = new BehaviorSubject(mcc);
+  calcFunction = new BehaviorSubject('mcc');
 
-  constructor(private experimentService: ExperimentService) {
-  }
+  constructor(private experimentService: ExperimentService) {}
 
   ngOnInit(): void {
   }
@@ -23,7 +22,7 @@ export class HomeComponent implements OnInit {
   }
 
   setCalcFunction(name) {
-    this.calcFunction.next(CALC_FUNCTIONS[name]);
+    this.calcFunction.next(name);
   }
 
 

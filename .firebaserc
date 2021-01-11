@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "expan-a80a9"
+  },
+  "targets": {
+    "expan-a80a9": {
+      "hosting": {
+        "expan": [
+          "expan-a80a9"
+        ]
+      }
+    }
+  }
+}

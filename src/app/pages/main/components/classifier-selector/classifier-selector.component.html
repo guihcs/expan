@@ -2,7 +2,7 @@
 
 <mat-radio-group #radioGroup aria-label="Select an option">
   <mat-radio-button *ngFor="let v of data"
-                    [value]="v">{{v.classifier}} {{v.date}}</mat-radio-button>
+                    [value]="v">{{v.classifier.name}} {{v.date}} {{v.classifier.label}}</mat-radio-button>
 </mat-radio-group>
 
 <div>

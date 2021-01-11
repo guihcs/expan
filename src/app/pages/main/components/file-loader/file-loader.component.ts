@@ -17,9 +17,12 @@ export class FileLoaderComponent implements OnInit {
   }
 
   loadExperiments(eventTarget){
-    this.experimentService.loadExperiments(eventTarget.files).then(v => {
+    this.experimentService.addExperiments(eventTarget.files).then(v => {
       this.router.navigate(['home']);
     });
   }
 
+  getLoadedExperiments(){
+    return this.experimentService.getLoadedExperimentFiles();
+  }
 }

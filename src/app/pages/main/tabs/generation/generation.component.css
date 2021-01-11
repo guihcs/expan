@@ -1,0 +1,13 @@
+
+
+table {
+  width: 100%;
+}
+
+.best {
+  color: limegreen;
+}
+
+.worst {
+  color: orangered;
+}

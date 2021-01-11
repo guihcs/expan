@@ -1,1 +1,49 @@
 <h1>Generation</h1>
+
+
+<mat-form-field appearance="fill">
+  <mat-label>Select Architecture</mat-label>
+  <mat-select (valueChange)="setSelectedValue($event)" >
+    <mat-option *ngFor="let ensemble of ensembles" [value]="ensemble">
+      {{ensemble.classifier.name}} {{ensemble.classifier.label}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+
+<div id="metricSelector">
+  <button (click)="setSelectedMetric('mcc')">MCC</button>
+  <button (click)="setSelectedMetric('precision')">Precision</button>
+  <button (click)="setSelectedMetric('recall')">Recall</button>
+  <button (click)="setSelectedMetric('bac')">BAC</button>
+  <button (click)="setSelectedMetric('acc')">ACC</button>
+</div>
+
+<p>Mean: {{correctMean}}</p>
+
+<table mat-table *ngIf="displayedColumns" [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="dataset">
+    <th mat-header-cell *matHeaderCellDef> Dataset </th>
+    <td mat-cell *matCellDef="let element"> {{element.dataset}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="decision">
+    <th mat-header-cell *matHeaderCellDef> Decision </th>
+    <td mat-cell *matCellDef="let element">
+      <span *ngFor="let i of element.decision"
+            [class] = "element.correctMap[i]"
+      >{{i}} </span>
+      ({{element.correctCount}})
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="expected">
+    <th mat-header-cell *matHeaderCellDef> Expected </th>
+    <td mat-cell *matCellDef="let element"> {{element.expected}} </td>
+  </ng-container>
+
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

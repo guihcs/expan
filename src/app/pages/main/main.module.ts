@@ -18,10 +18,17 @@ import { ComparatorComponent } from './tabs/comparator/comparator.component';
 import { DatePlotComponent } from './tabs/date-plot/date-plot.component';
 import { ClassifierSelectorComponent } from './components/classifier-selector/classifier-selector.component';
 import {MatRadioModule} from "@angular/material/radio";
+import { DatabaseInfoComponent } from './components/database-info/database-info.component';
+import {OverlayModule} from "@angular/cdk/overlay";
+import {NumberArrPipe} from "../../pipes/number-arr/number-arr.pipe";
+import {BarChartModule, LineChartModule} from "@swimlane/ngx-charts";
+import {MeanPipe} from "../../pipes/mean/mean.pipe";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
 
 
 @NgModule({
-  declarations: [HomeComponent, GenerationComponent, MainComponent, ExperimentTableComponent, ComparatorComponent, DatePlotComponent, ClassifierSelectorComponent],
+  declarations: [HomeComponent, GenerationComponent, MainComponent, ExperimentTableComponent, ComparatorComponent, DatePlotComponent, ClassifierSelectorComponent, DatabaseInfoComponent, NumberArrPipe, MeanPipe],
   imports: [
     CommonModule,
     MainRoutingModule,
@@ -33,7 +40,12 @@ import {MatRadioModule} from "@angular/material/radio";
     MatCardModule,
     MatListModule,
     MatDialogModule,
-    MatRadioModule
+    MatRadioModule,
+    OverlayModule,
+    BarChartModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    LineChartModule
   ]
 })
 export class MainModule { }

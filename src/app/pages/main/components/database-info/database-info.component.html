@@ -1,0 +1,15 @@
+<mat-card>
+  <p> size: <span class="number">{{data.dataSize}} </span></p>
+  <p> target count: <span class="number">{{data.targetCount}}</span></p>
+  <p> outlier count: <span class="number">{{data.outlierCount}}</span></p>
+  <p> features: <span class="number">{{data.features}}</span></p>
+  <p> size/features: <span class="number">{{data.dataSize / data.features | number}}</span></p>
+  <mat-divider></mat-divider>
+  <p> min: <span class="number">{{data.min | mean | number}}</span></p>
+  <p> max: <span class="number">{{data.max | mean | number}}</span></p>
+  <p> mean: <span class="number">{{data.mean | mean | number}}</span></p>
+  <p> std: <span class="number">{{data.std | mean | number}}</span></p>
+  <p> mode: <span class="number">{{data.mode | mean | number}}</span></p>
+</mat-card>
+
+

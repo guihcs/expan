@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {BehaviorSubject} from "rxjs";
+import {ExperimentService} from "../../../../services/experiment/experiment.service";
 
 @Component({
   selector: 'app-experiment-table',
@@ -13,9 +14,9 @@ export class ExperimentTableComponent implements OnInit {
   dataSource = new MatTableDataSource();
 
   @Input() experiments: BehaviorSubject<Map<string, any>>;
-  @Input() calcFunction: BehaviorSubject<any>;
+  @Input() metric;
 
-  constructor() { }
+  constructor(private experimentService: ExperimentService) { }
 
   ngOnInit(): void {
     this.experiments.subscribe(experiments => {
@@ -23,92 +24,30 @@ export class ExperimentTableComponent implements OnInit {
       this.loadExperiments(experiments);
     });
 
-    this.calcFunction.subscribe(v => {
+    this.metric.subscribe(v => {
       this.loadExperiments(this.experiments.value);
     })
   }
 
   loadExperiments(experiments){
-    const classifiers = new Set();
-    let data = [];
 
-    experiments.forEach((value, key) => {
-      let line = {};
+    let newestClassifiers = this.experimentService.getNewestClassifiers();
 
-      value.forEach(e => {
-        if(e.classifier in line && new Date(e.date) < line[e.classifier].date) return;
+    let data = this.experimentService.getExperimentResults(newestClassifiers, this.metric.value)
 
-        line[e.classifier] = {
-          value: this.calcFunction.value(e.result.tp, e.result.tn, e.result.fp, e.result.fn),
-          date: new Date(e.date)
-        };
-        classifiers.add(e.classifier);
-      });
+    data.forEach(v => {
+      this.formatResult(v, newestClassifiers.map(v => v.classifier.name + ',' + v.date));
 
-
-      let best = this.getBestClassifiers(line);
-
-      this.formatResult(line);
-
-      line['best'] = best;
-      line['dataset'] = {value: key};
-      data.push(line);
     });
 
-    let classifierNames: any[] = Array.from(classifiers);
-
-    let mean = {};
-
-    classifierNames.forEach(c => {
-      mean[c] = {value: 0};
-    });
-
-    data.forEach(d => {
-      classifierNames.forEach(c => {
-
-        const v = parseFloat(d[c].value);
-        if (isNaN(v)) return;
-
-        mean[c].value += v;
-      });
-    });
-
-    classifierNames.forEach(c => {
-      mean[c].value /= data.length;
-    });
-
-    this.formatResult(mean);
-
-    mean['best'] = this.getBestClassifiers(mean);
-    mean['dataset'] = {value: 'Mean'};
-
-    data = [mean, ...data];
-
-    this.displayedColumns = ['dataset', ...classifierNames];
+    this.displayedColumns = ['dataset', ...(newestClassifiers.map(v => v.classifier.name + ',' + v.date))];
 
     this.dataSource.data = data;
   }
 
-  getBestClassifiers(classifiers){
-    let v = -Infinity;
-    let best = [];
+  formatResult(classifiers, n){
 
-    Object.keys(classifiers).forEach(k => {
-      if (v < classifiers[k].value){
-        v = classifiers[k].value;
-        best = [k];
-      }else if (v == classifiers[k].value){
-        best.push(k);
-      }
-    });
-
-    return best;
-  }
-
-
-  formatResult(classifiers){
-
-    Object.keys(classifiers).forEach(k => {
+    n.forEach(k => {
       classifiers[k].value = classifiers[k].value.toFixed(2);
     });
 
@@ -116,6 +55,7 @@ export class ExperimentTableComponent implements OnInit {
 
 
   isBest(best, name){
+    if(!best) return 0;
     return best.findIndex(v => v == name) > -1;
   }
 

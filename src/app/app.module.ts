@@ -8,6 +8,7 @@ import { FileLoaderComponent } from './pages/main/components/file-loader/file-lo
 import {MainRoutingModule} from "./pages/main/main-routing.module";
 import {MainModule} from "./pages/main/main.module";
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,6 +22,8 @@ import {MainModule} from "./pages/main/main.module";
     MainModule
   ],
   providers: [],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

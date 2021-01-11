@@ -3,6 +3,8 @@
 
 <input id="f" type="file" accept=".json" multiple (change)="loadExperiments($event.target)">
 
+<p *ngFor="let f of getLoadedExperiments()"> {{ f }}</p>
+
 <div>
   <button>CANCEL</button>
   <button>OK</button>
