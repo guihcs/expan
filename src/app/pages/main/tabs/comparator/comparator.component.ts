@@ -17,36 +17,9 @@ export class ComparatorComponent implements OnInit {
   selectedMetric = 'mcc';
   displayedColumns: any[];
   metricDiff = [];
-  lineRelation = [
-    {
-      "name": "Germany",
-      "series": [
-        {
-          "name": "2010",
-          "value": 7300000
-        },
-        {
-          "name": "2011",
-          "value": 8940000
-        }
-      ]
-    },
-
-    {
-      "name": "USA",
-      "series": [
-        {
-          "name": "2010",
-          "value": 7870000
-        },
-        {
-          "name": "2011",
-          "value": 8270000
-        }
-      ]
-    }
-  ];
+  lineRelation = [];
   dataSource = new MatTableDataSource();
+  allCl: Map<string, any>;
 
   constructor(
     private experimentService: ExperimentService,
@@ -75,12 +48,17 @@ export class ComparatorComponent implements OnInit {
   }
 
   calcResults() {
-    const clN = this.cls.map(c => [c.classifier.name, c.date].join(','));
+    this.allCl = new Map();
+    this.allCl.set('0', {name: 'dataset'});
+    this.allCl.set('3', {name: 'diff'});
+    this.cls.forEach(c => this.allCl.set('' + c.id, c))
+
     let experimentResults = this.experimentService.getExperimentResults(this.cls, this.selectedMetric);
-    this.calcDiff(clN, experimentResults);
-    this.formatData(clN, experimentResults);
-    this.displayedColumns = ['dataset', ...this.cls.map(c => [c.classifier.name, c.date].join(','))];
-    this.displayedColumns.push('diff');
+
+    this.calcDiff(this.cls, experimentResults);
+    this.formatData(this.cls, experimentResults);
+    this.displayedColumns = ['0', ...this.cls.map(c => '' + c.id), '3'];
+
 
     this.dataSource.data = experimentResults;
 
@@ -91,16 +69,17 @@ export class ComparatorComponent implements OnInit {
   calcDiff(classifiers, data) {
 
     data.forEach(d => {
-      d.diff = (d[classifiers[0]].value - d[classifiers[1]].value) / d[classifiers[0]].value * 100;
+
+      d['3'] = (d[this.cls[0].id].value - d[this.cls[1].id].value) / d[this.cls[0].id].value * 100;
     })
   }
 
   formatData(classifiers, data) {
     data.forEach(d => {
       classifiers.forEach(c => {
-        d[c] = d[c].value.toFixed(2);
+        d[c.id] = d[c.id].value.toFixed(2);
       })
-      d.diff = d.diff.toFixed(2)
+      d['3'] = d['3'].toFixed(2)
     })
 
   }
@@ -122,8 +101,9 @@ export class ComparatorComponent implements OnInit {
 
 
   openDatabaseInfo(ref, el, col) {
-    let info = this.experimentService.getDatasetInfo(el['dataset']);
-    if (col != 'dataset' || info == null) return;
+    let info = el['0'];
+
+    if (col != '0' || info.dataSize == null) return;
 
     this.overlayService.open(ref, DatabaseInfoComponent, info);
   }
@@ -132,14 +112,14 @@ export class ComparatorComponent implements OnInit {
     this.overlayService.close();
   }
 
-  getAllMetricDiff(){
-    const clN = this.cls.map(c => [c.classifier.name, c.date].join(','));
+  getAllMetricDiff() {
+
     let d = [];
     this.experimentService.getAllMetrics().forEach(m => {
       let experimentResults = this.experimentService.getExperimentResults(this.cls, m);
       let mexp = [experimentResults[0]];
-      this.calcDiff(clN, mexp);
-      d.push({name: m, value: mexp[0].diff})
+      this.calcDiff(this.allCl, mexp);
+      d.push({name: m, value: mexp[0]['3']})
 
     })
 
@@ -147,46 +127,113 @@ export class ComparatorComponent implements OnInit {
     return d;
   }
 
-  getDatasetRelation(res: any[]){
+  getDatasetRelation(res: any[]) {
+    res = res.slice(1);
     let data = [];
+
     ['dataSize', 'features', 'targetCount', 'outlierCount'].forEach(n => {
 
-      let min = Math.log(this.getMin(n, res.slice(1)));
-      let max = Math.log(this.getMax(n, res.slice(1)));
+      let min = Math.log(this.getMin(n, res));
+      let max = Math.log(this.getMax(n, res));
 
-      let r = res.slice(1).map(r => {
-        return {name:  (Math.log(r.dataset[n]) - min) / (max - min), value: r.diff}
+      let r = res.map(r => {
+        return {name: (Math.log(r['0'][n]) - min) / (max - min), value: r['3']}
       });
 
       data.push({
         name: n,
         series: r
       })
+    });
+
+    ['mean', 'std', 'mode'].forEach(n => {
+
+      let min = Math.log(this.getArrMin(n, res));
+      let max = Math.log(this.getArrMax(n, res));
+
+      let r = res.map(r => {
+
+        let mean = this.getArrMean(r[0][n]);
+        return {name: (Math.log(mean) - min) / (max - min), value: r['3']};
+      })
+
+      data.push({
+        name: n,
+        series: r
+      })
+
     })
 
 
     return data;
   }
 
-  getMin(f, d: any[]){
+  getArrMean(data) {
+    let reduce = data.reduce((previousValue, currentValue) => previousValue + currentValue);
+    return reduce / data.length;
+  }
+
+  getArrMin(f, d) {
+    let max = +Infinity;
+
+    d.forEach(v => {
+      let dataset = v['0'];
+      let mean = this.getArrMean(dataset[f]);
+      if (mean < max) max = mean;
+    })
+
+    return max;
+  }
+
+  getArrMax(f, d) {
+    let max = -Infinity;
+
+    d.forEach(v => {
+      let dataset = v['0'];
+      let mean = this.getArrMean(dataset[f]);
+      if (mean > max) max = mean;
+    })
+
+    return max;
+  }
+
+  getMin(f, d: any[]) {
 
     let max = +Infinity;
 
     d.forEach(v => {
-      if(v.dataset[f] < max) max = v.dataset[f];
+      let dataset = v['0'];
+
+      if (dataset[f] < max) max = dataset[f];
     })
 
     return max;
   }
 
-  getMax(f, d: any[]){
+  getMax(f, d: any[]) {
 
     let max = -Infinity;
 
     d.forEach(v => {
-      if(v.dataset[f] > max) max = v.dataset[f];
+      let dataset = v['0'];
+      if (dataset[f] > max) max = dataset[f];
     })
 
     return max;
   }
+
+  sortVal(ev) {
+    let data = this.dataSource.data.slice(1);
+    let esID = '' + ev.active;
+
+    data.sort((a, b) => {
+        if (ev.direction == 'asc') return parseFloat(a[esID]) - parseFloat(b[esID]);
+        return parseFloat(b[esID]) - parseFloat(a[esID]);
+      }
+    );
+
+    this.dataSource.data = [this.dataSource.data[0], ...data];
+
+  }
+
 }

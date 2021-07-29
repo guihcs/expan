@@ -14,8 +14,8 @@
 </div>
 
 <div>
-  <p>c1: {{cls[0]?.classifier.name}} {{cls[0]?.classifier.label}} </p>
-  <p>c2: {{cls[1]?.classifier.name}} {{cls[1]?.classifier.label}} </p>
+  <p>c1: {{cls[0]?.name}} {{cls[0]?.label}} </p>
+  <p>c2: {{cls[1]?.name}} {{cls[1]?.label}} </p>
 </div>
 
 <ngx-charts-bar-vertical
@@ -36,22 +36,27 @@
 >
 </ngx-charts-line-chart>
 
-<table mat-table *ngIf="displayedColumns" [dataSource]="dataSource" class="mat-elevation-z8">
+<table mat-table *ngIf="displayedColumns"
+       [dataSource]="dataSource"
+       class="mat-elevation-z8"
+       matSort
+       (matSortChange)="sortVal($event)"
+>
 
 
   <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
-    <th mat-header-cell *matHeaderCellDef> {{col}} </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{this.allCl.get(col).name}} </th>
     <td #rdRef cdkOverlayOrigin mat-cell *matCellDef="let element"
         (mouseenter)="openDatabaseInfo(rdRef, element, col)"
         (mouseleave)="closeInfo()"
     >
 
-      <div *ngIf="col == 'diff'" [class] = 'getValueClass(element[col])'>
+      <div *ngIf="col == '3'" [class] = 'getValueClass(element[col])'>
         <span *ngIf="getValueClass(element[col]) == 'best'">↑</span>
         <span *ngIf="getValueClass(element[col]) == 'worst'">↓</span>
         {{formatDiff(element[col])}}
       </div>
-      <div *ngIf="col != 'diff'">
+      <div *ngIf="col != '3'">
         <div *ngIf="element[col].name">
           {{element[col].name | slice: 0 : 20}}
         </div>

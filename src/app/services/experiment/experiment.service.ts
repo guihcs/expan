@@ -82,10 +82,14 @@ export class ExperimentService {
   getAllClassifiers() {
     this.getExperiments();
 
-    let exp = this.experimentMap.entries().next().value;
-    return exp ? exp[1].map(v => {
-      return {classifier: v.classifier, date: v.date};
-    }) : [];
+    let clMap = new Map();
+
+    [...this.experimentMap.values()].forEach(v => {
+      v.map(c => c.classifier).forEach(c => clMap.set(c.id, c))
+    });
+
+
+    return [...clMap.values()];
   }
 
   getNewestClassifiers() {
@@ -122,21 +126,27 @@ export class ExperimentService {
     let mean = {};
 
     this.experimentMap.forEach((value, key) => {
+
       let line = {};
-      value.forEach(e => {
-        let cl = {classifier: e.classifier.name, date: e.date};
-        if (classifiers.findIndex(c => c.classifier.name == cl.classifier && c.date == cl.date) < 0) return;
-        let clN = [e.classifier.name, e.date].join(',');
-        let res = CALC_FUNCTIONS[metric](e.result[1][1], e.result[0][0], e.result[0][1], e.result[1][0]);
-        line[clN] = {
+      value.forEach(experiment => {
+
+        let cl = experiment.classifier;
+
+        if (classifiers.findIndex(c => c.id == cl.id) < 0) return;
+
+        let res = this.calcMetric(experiment.result, metric);
+        res = !isNaN(res) ? res : 0;
+        line[cl.id] = {
           value: res,
-          date: new Date(e.date)
+          date: new Date(experiment.date)
         };
-        line['dataset'] = e.dataset;
-        line['best'] = this.getBestClassifiers(line);
-        if (!mean[clN]) mean[clN] = {value: 0};
-        mean[clN].value += res;
+
+        if (!mean[cl.id]) mean[cl.id] = {value: 0};
+        mean[cl.id].value += res;
       });
+
+      line['0'] = value[0].dataset;
+      line['best'] = this.getBestClassifiers(line);
       data.push(line);
     });
 
@@ -145,11 +155,37 @@ export class ExperimentService {
     });
 
     mean['best'] = this.getBestClassifiers(mean);
-    mean['dataset'] = 'Mean';
+    mean['0'] = {name: 'Mean'};
 
     return [mean, ...data];
   }
 
+  calcMean(data, cls){
+
+
+    let mean = {};
+
+    data.forEach(d => {
+
+      cls.forEach(c => {
+        if (!mean[c]) mean[c] = {value: 0};
+        mean[c].value += parseFloat(d[c].value);
+      })
+    })
+
+    Object.keys(mean).forEach(k => {
+      mean[k].value /= data.length;
+    });
+
+    mean['best'] = this.getBestClassifiers(mean);
+    mean['0'] = {name: 'Mean'};
+
+    return mean;
+  }
+
+  calcMetric(cf, metric){
+    return CALC_FUNCTIONS[metric](cf[1][1], cf[0][0], cf[0][1], cf[1][0]);
+  }
   getBestClassifiers(classifiers){
     let v = -Infinity;
     let best = [];
@@ -157,9 +193,9 @@ export class ExperimentService {
     Object.keys(classifiers).forEach(k => {
       if (v < classifiers[k].value){
         v = classifiers[k].value;
-        best = [k];
+        best = [parseInt(k)];
       }else if (v == classifiers[k].value){
-        best.push(k);
+        best.push(parseInt(k));
       }
     });
 
@@ -193,5 +229,15 @@ export class ExperimentService {
 
   getClassifierIndexName(cl){
     return cl.classifier.name + ',' + cl.date;
+  }
+
+  getEnsembles(){
+    let allClassifiers = this.getAllClassifiers();
+    return allClassifiers.filter(c => c.type == 'ensemble');
+  }
+
+  getSingles(){
+    let allClassifiers = this.getAllClassifiers();
+    return allClassifiers.filter(c => c.type == 'single');
   }
 }

@@ -17,7 +17,6 @@ export class ClassifierSelectorComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
-
   }
 
   cancel(){

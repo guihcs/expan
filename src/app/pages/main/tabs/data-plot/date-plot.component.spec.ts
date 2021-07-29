@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DatePlotComponent } from './date-plot.component';
+import { DataPlotComponent } from './data-plot.component';
 
 describe('DatePlotComponent', () => {
-  let component: DatePlotComponent;
-  let fixture: ComponentFixture<DatePlotComponent>;
+  let component: DataPlotComponent;
+  let fixture: ComponentFixture<DataPlotComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DatePlotComponent ]
+      declarations: [ DataPlotComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DatePlotComponent);
+    fixture = TestBed.createComponent(DataPlotComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

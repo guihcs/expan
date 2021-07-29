@@ -3,11 +3,11 @@
 export function mcc(tp, tn, fp, fn){
   let mcc = (tp * tn) - (fp * fn);
   let div = Math.sqrt((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn));
-  return mcc / div;
+  return mcc / (div > 0 ? div : 1);
 }
 
 export function precision(tp, tn, fp, fn){
-  return tp /(tp + fp);
+  return tp / (tp + fp);
 }
 
 export function recall(tp, tn, fp, fn){

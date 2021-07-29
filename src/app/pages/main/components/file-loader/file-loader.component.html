@@ -6,8 +6,6 @@
 <p *ngFor="let f of getLoadedExperiments()"> {{ f }}</p>
 
 <div>
-  <button>CANCEL</button>
-  <button>OK</button>
-
+  <button (click)="close()">OK</button>
 </div>
 

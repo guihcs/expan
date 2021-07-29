@@ -14,4 +14,9 @@ table {
 .result-cell {
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+
+mat-slider {
+  width: 100%;
 }

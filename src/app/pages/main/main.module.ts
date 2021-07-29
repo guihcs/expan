@@ -15,7 +15,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatListModule} from "@angular/material/list";
 import {MatDialogModule} from "@angular/material/dialog";
 import { ComparatorComponent } from './tabs/comparator/comparator.component';
-import { DatePlotComponent } from './tabs/data-plot/date-plot.component';
+import { DataPlotComponent } from './tabs/data-plot/data-plot.component';
 import { ClassifierSelectorComponent } from './components/classifier-selector/classifier-selector.component';
 import {MatRadioModule} from "@angular/material/radio";
 import { DatabaseInfoComponent } from './components/database-info/database-info.component';
@@ -25,27 +25,31 @@ import {BarChartModule, LineChartModule} from "@swimlane/ngx-charts";
 import {MeanPipe} from "../../pipes/mean/mean.pipe";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatSelectModule} from "@angular/material/select";
+import {MatSortModule} from "@angular/material/sort";
+import {MatSliderModule} from "@angular/material/slider";
 
 
 @NgModule({
-  declarations: [HomeComponent, GenerationComponent, MainComponent, ExperimentTableComponent, ComparatorComponent, DatePlotComponent, ClassifierSelectorComponent, DatabaseInfoComponent, NumberArrPipe, MeanPipe],
-  imports: [
-    CommonModule,
-    MainRoutingModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTableModule,
-    MatSidenavModule,
-    MatCardModule,
-    MatListModule,
-    MatDialogModule,
-    MatRadioModule,
-    OverlayModule,
-    BarChartModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    LineChartModule
-  ]
+  declarations: [HomeComponent, GenerationComponent, MainComponent, ExperimentTableComponent, ComparatorComponent, DataPlotComponent, ClassifierSelectorComponent, DatabaseInfoComponent, NumberArrPipe, MeanPipe],
+    imports: [
+        CommonModule,
+        MainRoutingModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTableModule,
+        MatSidenavModule,
+        MatCardModule,
+        MatListModule,
+        MatDialogModule,
+        MatRadioModule,
+        OverlayModule,
+        BarChartModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        LineChartModule,
+        MatSortModule,
+        MatSliderModule
+    ]
 })
 export class MainModule { }

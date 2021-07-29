@@ -8,10 +8,23 @@
   <button (click)="setCalcFunction('acc')">ACC</button>
 </div>
 
-<div>
+<mat-form-field appearance="fill">
+  <mat-label>Select Architecture</mat-label>
+  <mat-select (valueChange)="setSelectedValue($event)" >
+    <mat-option *ngFor="let ensemble of getEnsembles()" [value]="ensemble">
+      {{ensemble.name}} {{ensemble.label}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+
+
+
+<div *ngIf="ensemble">
   <app-experiment-table
     [experiments]="getExperiments()"
     [metric]="calcFunction"
+    [ensemble]="ensemble"
   ></app-experiment-table>
 
 </div>

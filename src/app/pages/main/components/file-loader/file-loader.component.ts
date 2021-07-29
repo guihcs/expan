@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ExperimentService} from "../../../../services/experiment/experiment.service";
 import {Router} from "@angular/router";
+import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-file-loader',
@@ -10,7 +11,9 @@ import {Router} from "@angular/router";
 export class FileLoaderComponent implements OnInit {
 
   constructor(private experimentService: ExperimentService,
-              private router: Router) {
+              private router: Router,
+              public dialogRef: MatDialogRef<FileLoaderComponent>,
+              ) {
   }
 
   ngOnInit(): void {
@@ -24,5 +27,9 @@ export class FileLoaderComponent implements OnInit {
 
   getLoadedExperiments(){
     return this.experimentService.getLoadedExperimentFiles();
+  }
+
+  close(){
+    this.dialogRef.close()
   }
 }

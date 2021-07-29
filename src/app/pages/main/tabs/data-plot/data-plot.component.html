@@ -5,7 +5,7 @@
   <mat-label>Select Architecture</mat-label>
   <mat-select (valueChange)="setSelectedValue($event)" >
     <mat-option *ngFor="let ensemble of ensembles" [value]="ensemble">
-      {{ensemble.classifier.name}} {{ensemble.classifier.label}}
+      {{ensemble.name}} {{ensemble.label}}
     </mat-option>
   </mat-select>
 </mat-form-field>

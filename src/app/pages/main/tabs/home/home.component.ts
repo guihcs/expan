@@ -11,6 +11,7 @@ import {BehaviorSubject} from "rxjs";
 export class HomeComponent implements OnInit {
 
   calcFunction = new BehaviorSubject('mcc');
+  ensemble;
 
   constructor(private experimentService: ExperimentService) {}
 
@@ -25,5 +26,13 @@ export class HomeComponent implements OnInit {
     this.calcFunction.next(name);
   }
 
+  setSelectedValue(v){
+    if (!this.ensemble) this.ensemble = new BehaviorSubject(v)
+    else this.ensemble.next(v);
+  }
+
+  getEnsembles(){
+    return this.experimentService.getEnsembles();
+  }
 
 }
